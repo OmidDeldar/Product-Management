@@ -1,5 +1,7 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import * as bcrypt from 'bcrypt'
+import { type } from "os";
+import { Product } from "src/product/entity/product.entity";
 @Entity()
 export class User extends BaseEntity{
     @PrimaryGeneratedColumn('uuid')
@@ -23,6 +25,9 @@ export class User extends BaseEntity{
     @Column({default:false})
     deleted:boolean;
 
+    @OneToMany(type => Product , product => product.user , { eager : true})
+    @JoinColumn()
+    product:Product[]
 
     //validate password for sign in
     async validatePassword(password:string) : Promise<boolean>{

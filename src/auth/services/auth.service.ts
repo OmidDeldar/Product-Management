@@ -1,8 +1,9 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthCredentialDto } from '../DTO/Auth-Credential.dto';
 import { SignInDto } from '../DTO/sign-in.dto';
+import { User } from '../entity/auth.entity';
 import { JwtPayload } from '../interface/jwt-payload.interface';
 import { UserRepository } from '../repository/auth.repository';
 
@@ -30,5 +31,31 @@ export class AuthService {
         const accessToken=await this.jwtService.sign(payload);
         
         return {accessToken};
+    }
+
+    //find all user
+    async findAll():Promise<User[]>{
+        const found=await this.userRepository.find({where :{deleted:false}});
+
+        return found;
+    }
+    //find user by id
+    async findUserById(id:string):Promise<User>{
+        const found=await this.userRepository.findOne({id});
+
+        if(!found)
+        throw new NotFoundException(`user with id ${id} doesnt exist`);
+
+        return found
+    }
+    //delete user
+    async deleteUser(id:string):Promise<string>{
+        const found=await this.findUserById(id);
+
+        found.deleted=true;
+
+        this.userRepository.save(found);
+
+        return 'delete successfully';
     }
 }
