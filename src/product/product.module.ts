@@ -3,10 +3,15 @@ import { ProductService } from './services/product.service';
 import { ProductController } from './controller/product.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProductRepository } from './repository/product.repository';
+import { AuthModule } from 'src/auth/auth.module';
+import { MulterModule } from '@nestjs/platform-express';
+import { UploadFileConfigService } from 'src/uploadfile/upload-file.config.service';
 
 @Module({
   imports:[
-    TypeOrmModule.forFeature([ProductRepository])
+    TypeOrmModule.forFeature([ProductRepository]),
+    AuthModule,
+    MulterModule.registerAsync({useClass:UploadFileConfigService}),
   ],
   providers: [ProductService],
   controllers: [ProductController]

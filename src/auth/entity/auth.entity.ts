@@ -27,7 +27,7 @@ export class User extends BaseEntity{
 
     @OneToMany(type => Product , product => product.user , { eager : true})
     @JoinColumn()
-    product:Product[]
+    product:Product[];
 
     //validate password for sign in
     async validatePassword(password:string) : Promise<boolean>{

@@ -1,5 +1,8 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UploadedFile, UseGuards, UseInterceptors, ValidationPipe } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
+import { diskStorage } from 'multer';
 import { CreateProductDto } from '../DTO/create-product.dto';
 import { GetProductByTitleDto } from '../DTO/get-product-by-title.dto';
 import { UpdateSaleDto } from '../DTO/update-sale.dto';
@@ -14,6 +17,11 @@ export class ProductController {
 
     //create product
     @Post('create')
+    @UseInterceptors(FileInterceptor('file',{
+        storage: diskStorage({
+            destination:'.'
+        })
+    }))
     async createProduct(@Body(ValidationPipe) createProductDto:CreateProductDto):Promise<Product>{
         return await this.productService.createProduct(createProductDto);
     }
@@ -45,5 +53,12 @@ export class ProductController {
     @Post('findBy/title')
     async findProductByTitle(@Body() getProductByTitleDto:GetProductByTitleDto):Promise<Product[]>{
         return await this.productService.findProductByTitle(getProductByTitleDto);
+    }
+
+    //upload product photo
+    @Post('upload/photo/:id')
+    @UseInterceptors(FileInterceptor('file'))
+    async uploadProductPhoto(@Param('id') id:string,@UploadedFile('file') file:Express.Multer.File):Promise<any>{
+        return await this.productService.uploadProfilePhoto(id,file);
     }
 }

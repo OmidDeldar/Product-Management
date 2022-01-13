@@ -1,6 +1,5 @@
-import { type } from "os";
 import { User } from "src/auth/entity/auth.entity";
-import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 
 @Entity()
@@ -24,6 +23,10 @@ export class Product extends BaseEntity{
     @Column({default:false})
     deleted:boolean;
 
-    @OneToMany(type => User , user => user.product , { eager : false})
+    @Column('simple-array',{nullable:true})
+    profile:Array<string>;
+
+    @ManyToOne(type => User , user => user.product , { eager : false})
     user:User;
+
 }

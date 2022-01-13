@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateProductDto } from '../DTO/create-product.dto';
 import { GetProductByTitleDto } from '../DTO/get-product-by-title.dto';
@@ -68,6 +68,27 @@ export class ProductService {
         return found;
 
         
+    }
+
+    //upload product photo
+    async uploadProfilePhoto(id:string,file:Express.Multer.File):Promise<any>{
+        const found= await this.findProductById(id);
+
+        if(!file)
+        throw new BadRequestException();
+
+
+
+        if(!Array.isArray(found.profile))
+        found.profile=[];
+
+        found.profile.push(file.originalname);
+
+        
+        
+        const saved=await this.productRepository.save(found);
+
+        return saved
     }
 
 }
