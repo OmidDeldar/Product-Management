@@ -1,16 +1,23 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/auth/entity/auth.entity';
+import { AddToCartDto } from '../DTO/add-to-cart.dto';
 import { CreateProductDto } from '../DTO/create-product.dto';
+import { GetProductByCategoryDto } from '../DTO/get-product-by-category.dto';
 import { GetProductByTitleDto } from '../DTO/get-product-by-title.dto';
 import { UpdateSaleDto } from '../DTO/update-sale.dto';
+import { AddProduct } from '../entity/add-product.entity';
 import { Product } from '../entity/product.entity';
+import { AddProductRepository } from '../repository/add-product.repository';
 import { ProductRepository } from '../repository/product.repository';
 
 @Injectable()
 export class ProductService {
     constructor(
         @InjectRepository(ProductRepository)
-        private productRepository:ProductRepository  
+        private productRepository:ProductRepository,
+        @InjectRepository(AddProductRepository)
+        private addProductRepository:AddProductRepository
     ){}
 
     //create product
@@ -70,6 +77,17 @@ export class ProductService {
         
     }
 
+    //find product by category
+    async findProductByCateogry(getProductByCategoryDto:GetProductByCategoryDto):Promise<Product[]>{
+        const {category}=getProductByCategoryDto
+        const found=await this.productRepository.find({where:{category:category}});
+
+        if(!found)
+        throw new NotFoundException(`category ${category} doesnt exist`);
+
+        return found;
+    }
+
     //upload product photo
     async uploadProfilePhoto(id:string,file:Express.Multer.File):Promise<any>{
         const found= await this.findProductById(id);
@@ -91,4 +109,18 @@ export class ProductService {
         return saved
     }
 
+    //get picture
+    async getPicture(fileName:string,res){
+        if(!fileName)
+        throw new BadRequestException();
+
+        const response=res.sendFile(process.cwd()+'/uploads/'+fileName);
+
+        return response
+    }
+
+    //add to cart
+    async addToCart(addToCartDto:AddToCartDto,user:User):Promise<AddProduct>{
+        return await this.addProductRepository.addToCart(addToCartDto,user);
+    }
 }

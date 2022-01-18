@@ -3,6 +3,9 @@ import { ApiProperty } from "@nestjs/swagger";
 export class CreateProductDto {
 
     @ApiProperty()
+    category:string;
+
+    @ApiProperty()
     title:string;
 
     @ApiProperty()

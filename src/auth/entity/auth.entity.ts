@@ -2,6 +2,7 @@ import { BaseEntity, Column, Entity, JoinColumn, OneToMany, PrimaryGeneratedColu
 import * as bcrypt from 'bcrypt'
 import { type } from "os";
 import { Product } from "src/product/entity/product.entity";
+import { AddProduct } from "src/product/entity/add-product.entity";
 @Entity()
 export class User extends BaseEntity{
     @PrimaryGeneratedColumn('uuid')
@@ -28,6 +29,10 @@ export class User extends BaseEntity{
     @OneToMany(type => Product , product => product.user , { eager : true})
     @JoinColumn()
     product:Product[];
+
+    @OneToMany(type => AddProduct , addproduct => addproduct.user , {eager:true})
+    @JoinColumn()
+    addproduct:AddProduct[];
 
     //validate password for sign in
     async validatePassword(password:string) : Promise<boolean>{
