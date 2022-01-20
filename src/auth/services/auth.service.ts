@@ -21,13 +21,14 @@ export class AuthService {
     }
 
     //signin user{
-    async signIn(signInInDto:SignInDto):Promise<{accessToken:string}>{
-        const username=await this.userRepository.validateUserPassword(signInInDto);
-
+    async signIn(signInDto:SignInDto):Promise<{accessToken:string}>{
+        const username=await this.userRepository.validateUserPassword(signInDto);
+        const findRole=await this.userRepository.findOne({username});
         if(!username)
         throw new UnauthorizedException('invalid username or password');
 
-        const payload:JwtPayload={username};
+        const role=findRole.role;
+        const payload:JwtPayload={username,role};
         const accessToken=await this.jwtService.sign(payload);
         
         return {accessToken};

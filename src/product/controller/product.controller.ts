@@ -1,9 +1,13 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Res, UploadedFile, UseGuards, UseInterceptors, ValidationPipe } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { getUser } from 'src/auth/decorator/get-user.decorator';
+import { RoleGuardDecorator } from 'src/auth/decorator/role-guard.decorator';
 import { User } from 'src/auth/entity/auth.entity';
+import { JwtGuard } from 'src/auth/guards/jwt.guard';
+import { RoleGuard } from 'src/auth/guards/role.guard';
+import { RoleEnum } from 'src/auth/enum/role.enum';
 import { AddToCartDto } from '../DTO/add-to-cart.dto';
 import { CreateProductDto } from '../DTO/create-product.dto';
 import { GetProductByCategoryDto } from '../DTO/get-product-by-category.dto';
@@ -20,9 +24,11 @@ export class ProductController {
 
 
     //create product
+    @RoleGuardDecorator(RoleEnum.ADMIN)
+    @UseGuards(JwtGuard,RoleGuard)
     @Post('create')
-    async createProduct(@Body(ValidationPipe) createProductDto:CreateProductDto):Promise<Product>{
-        return await this.productService.createProduct(createProductDto);
+    async createProduct(@Body(ValidationPipe) createProductDto:CreateProductDto,@getUser() user:User):Promise<Product>{
+        return await this.productService.createProduct(createProductDto,user);
     }
 
     //find product by id
@@ -31,12 +37,16 @@ export class ProductController {
         return await this.productService.findProductById(id);
     }
 
+    @RoleGuardDecorator(RoleEnum.ADMIN)
+    @UseGuards(JwtGuard,RoleGuard)
     //delete product by id
     @Delete('delete/:id')
     async deleteProduct(@Param('id') id:string):Promise<string>{
         return await this.productService.deleteProduct(id);
     }
 
+    @RoleGuardDecorator(RoleEnum.ADMIN)
+    @UseGuards(JwtGuard,RoleGuard)
     //update sale product
     @Patch('update/sale')
     async updateSale(@Body(ValidationPipe) updateSaleDto:UpdateSaleDto):Promise<Product>{
@@ -60,6 +70,8 @@ export class ProductController {
         return await this.productService.findProductByCateogry(getProductByCategoryDto);
     }
 
+    @RoleGuardDecorator(RoleEnum.ADMIN)
+    @UseGuards(JwtGuard,RoleGuard)
     //upload product photo
     @Post('upload/photo/:id')
     @UseInterceptors(FileInterceptor('file'))
@@ -74,7 +86,7 @@ export class ProductController {
     }
 
     //add to cart
-    @UseGuards(AuthGuard())
+    @UseGuards(JwtGuard)
     @Post('addToCart')
     async addToCart(@Body() addToCartDto:AddToCartDto,@getUser() user:User):Promise<AddProduct>{
         return await this.productService.addToCart(addToCartDto,user);

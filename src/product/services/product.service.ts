@@ -21,8 +21,8 @@ export class ProductService {
     ){}
 
     //create product
-    async createProduct(createProductDto:CreateProductDto):Promise<Product>{
-        return await this.productRepository.createProduct(createProductDto);
+    async createProduct(createProductDto:CreateProductDto,user:User):Promise<Product>{
+        return await this.productRepository.createProduct(createProductDto,user);
     }
 
     //find product by id

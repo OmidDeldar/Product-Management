@@ -33,9 +33,15 @@ export class Product extends BaseEntity{
 
     @ManyToOne(type => User , user => user.product , { eager : false})
     user:User;
+    
+    @Column()
+    userId:string;
 
     @OneToOne(type => AddProduct , addproduct => addproduct.product )
     @JoinColumn()
     addproduct:AddProduct;
+
+    @Column({nullable:true})
+    addproductId:string
 
 }

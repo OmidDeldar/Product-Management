@@ -20,6 +20,7 @@ export class AddProductRepository extends Repository<AddProduct>{
 
         const saved=await this.save(addProduct);
 
+        delete addProduct.user;
         return saved;
     }
 }

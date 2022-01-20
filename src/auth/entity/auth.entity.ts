@@ -1,8 +1,8 @@
 import { BaseEntity, Column, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import * as bcrypt from 'bcrypt'
-import { type } from "os";
 import { Product } from "src/product/entity/product.entity";
 import { AddProduct } from "src/product/entity/add-product.entity";
+import { RoleEnum } from "../enum/role.enum";
 @Entity()
 export class User extends BaseEntity{
     @PrimaryGeneratedColumn('uuid')
@@ -25,6 +25,9 @@ export class User extends BaseEntity{
 
     @Column({default:false})
     deleted:boolean;
+
+    @Column('enum',{enum:RoleEnum,default:RoleEnum.USER})
+    role:RoleEnum[]
 
     @OneToMany(type => Product , product => product.user , { eager : true})
     @JoinColumn()
