@@ -1,8 +1,13 @@
-import { Body, Controller, Delete, Get, Param, Post, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, UseGuards, ValidationPipe } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { getUser } from '../decorator/get-user.decorator';
+import { RoleGuardDecorator } from '../decorator/role-guard.decorator';
 import { AuthCredentialDto } from '../DTO/Auth-Credential.dto';
 import { SignInDto } from '../DTO/sign-in.dto';
 import { User } from '../entity/auth.entity';
+import { RoleEnum } from '../enum/role.enum';
+import { JwtGuard } from '../guards/jwt.guard';
+import { RoleGuard } from '../guards/role.guard';
 import { AuthService } from '../services/auth.service';
 
 @ApiTags('AUTH')
@@ -23,20 +28,25 @@ export class AuthController {
     }
     
     //find all user
+    @RoleGuardDecorator(RoleEnum.ADMIN)
+    @UseGuards(JwtGuard,RoleGuard)
     @Get('findAll')
     async findAll():Promise<User[]>{
         return await this.authService.findAll();
     }
 
     //find user by id
+    @RoleGuardDecorator(RoleEnum.ADMIN)
+    @UseGuards(JwtGuard,RoleGuard)
     @Get('find/:id')
     async findUserById(@Param('id') id:string):Promise<User>{
         return await this.authService.findUserById(id);
     }
 
     //delete user
-    @Delete('delete/:id')
-    async deleteUser(@Param('id') id:string):Promise<string>{
-        return await this.authService.deleteUser(id);
+    @UseGuards(JwtGuard)
+    @Delete('delete/user')
+    async deleteUser(@getUser() user:User):Promise<string>{
+        return await this.authService.deleteUser(user);
     }
 }

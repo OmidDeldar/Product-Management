@@ -50,7 +50,8 @@ export class AuthService {
         return found
     }
     //delete user
-    async deleteUser(id:string):Promise<string>{
+    async deleteUser(user:User):Promise<string>{
+        const {id}=user;
         const found=await this.findUserById(id);
 
         found.deleted=true;
