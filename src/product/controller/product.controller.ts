@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Res, UploadedFile, UseGuards, UseInterceptors, ValidationPipe } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { getUser } from 'src/auth/decorator/get-user.decorator';
 import { RoleGuardDecorator } from 'src/auth/decorator/role-guard.decorator';
 import { User } from 'src/auth/entity/auth.entity';
@@ -79,6 +79,18 @@ export class ProductController {
     @RoleGuardDecorator(RoleEnum.ADMIN)
     @UseGuards(JwtGuard,RoleGuard)
     @ApiBearerAuth('access-token')
+    @ApiConsumes('multipart/form-data')
+    @ApiBody({
+        schema: {
+          type: 'object',
+          properties: {
+            file: {
+              type: 'string',
+              format: 'binary',
+            },
+          },
+        },
+      })
     @Post('upload/photo/:id')
     @UseInterceptors(FileInterceptor('file'))
     async uploadProductPhoto(@Param('id') id:string,@UploadedFile('file') file:Express.Multer.File):Promise<any>{
