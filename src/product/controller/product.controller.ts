@@ -26,6 +26,7 @@ export class ProductController {
     //create product
     @RoleGuardDecorator(RoleEnum.ADMIN)
     @UseGuards(JwtGuard,RoleGuard)
+    @ApiBearerAuth('access-token')
     @Post('create')
     async createProduct(@Body(ValidationPipe) createProductDto:CreateProductDto,@getUser() user:User):Promise<Product>{
         return await this.productService.createProduct(createProductDto,user);
@@ -37,17 +38,20 @@ export class ProductController {
         return await this.productService.findProductById(id);
     }
 
+    //delete product by id
     @RoleGuardDecorator(RoleEnum.ADMIN)
     @UseGuards(JwtGuard,RoleGuard)
-    //delete product by id
+    @ApiBearerAuth('access-token')
     @Delete('delete/:id')
     async deleteProduct(@Param('id') id:string):Promise<string>{
         return await this.productService.deleteProduct(id);
     }
 
+
+    //update sale product
     @RoleGuardDecorator(RoleEnum.ADMIN)
     @UseGuards(JwtGuard,RoleGuard)
-    //update sale product
+    @ApiBearerAuth('access-token')
     @Patch('update/sale')
     async updateSale(@Body(ValidationPipe) updateSaleDto:UpdateSaleDto):Promise<Product>{
         return await this.productService.updateSale(updateSaleDto);
@@ -65,14 +69,16 @@ export class ProductController {
         return await this.productService.findProductByTitle(getProductByTitleDto);
     }
 
+    //find by category
     @Post('findby/category')
     async findProductByCategory(@Body() getProductByCategoryDto:GetProductByCategoryDto ):Promise<Product[]>{
         return await this.productService.findProductByCateogry(getProductByCategoryDto);
     }
 
+    //upload product photo
     @RoleGuardDecorator(RoleEnum.ADMIN)
     @UseGuards(JwtGuard,RoleGuard)
-    //upload product photo
+    @ApiBearerAuth('access-token')
     @Post('upload/photo/:id')
     @UseInterceptors(FileInterceptor('file'))
     async uploadProductPhoto(@Param('id') id:string,@UploadedFile('file') file:Express.Multer.File):Promise<any>{
@@ -87,6 +93,7 @@ export class ProductController {
 
     //add to cart
     @UseGuards(JwtGuard)
+    @ApiBearerAuth('access-token')
     @Post('addToCart')
     async addToCart(@Body() addToCartDto:AddToCartDto,@getUser() user:User):Promise<AddProduct>{
         return await this.productService.addToCart(addToCartDto,user);

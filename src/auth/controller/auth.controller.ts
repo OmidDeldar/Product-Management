@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post, UseGuards, ValidationPipe } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { getUser } from '../decorator/get-user.decorator';
 import { RoleGuardDecorator } from '../decorator/role-guard.decorator';
 import { AuthCredentialDto } from '../DTO/Auth-Credential.dto';
@@ -30,6 +30,7 @@ export class AuthController {
     //find all user
     @RoleGuardDecorator(RoleEnum.ADMIN)
     @UseGuards(JwtGuard,RoleGuard)
+    @ApiBearerAuth('access-token')
     @Get('findAll')
     async findAll():Promise<User[]>{
         return await this.authService.findAll();
@@ -38,6 +39,7 @@ export class AuthController {
     //find user by id
     @RoleGuardDecorator(RoleEnum.ADMIN)
     @UseGuards(JwtGuard,RoleGuard)
+    @ApiBearerAuth('access-token')
     @Get('find/:id')
     async findUserById(@Param('id') id:string):Promise<User>{
         return await this.authService.findUserById(id);
@@ -45,6 +47,7 @@ export class AuthController {
 
     //delete user
     @UseGuards(JwtGuard)
+    @ApiBearerAuth('access-token')
     @Delete('delete/user')
     async deleteUser(@getUser() user:User):Promise<string>{
         return await this.authService.deleteUser(user);
