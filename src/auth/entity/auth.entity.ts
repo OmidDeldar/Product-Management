@@ -3,6 +3,7 @@ import * as bcrypt from 'bcrypt'
 import { Product } from "src/product/entity/product.entity";
 import { AddProduct } from "src/product/entity/add-product.entity";
 import { RoleEnum } from "../enum/role.enum";
+import { cp } from "fs";
 @Entity()
 export class User extends BaseEntity{
     @PrimaryGeneratedColumn('uuid')
@@ -11,14 +12,23 @@ export class User extends BaseEntity{
     @Column()
     username:string;
 
-    @Column()
+    @Column({nullable:true})
     firstName:string;
 
-    @Column()
+    @Column({nullable:true})
     lastName:string;
 
     @Column()
     password:string;
+
+    @Column()
+    email:string;
+ 
+    @Column({nullable:true})
+    address:string;
+
+    @Column({nullable:true})
+    phoneNumber:number
 
     @Column()
     salt:string;

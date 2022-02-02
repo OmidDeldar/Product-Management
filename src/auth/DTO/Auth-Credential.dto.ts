@@ -8,6 +8,7 @@ export class AuthCredentialDto {
     @ApiProperty()
     username:string;
 
+    
     @IsString()
     @MinLength(4)
     @MaxLength(20)
@@ -29,4 +30,22 @@ export class AuthCredentialDto {
             )
     @ApiProperty()
     password:string;
+
+    @IsString()
+    @MinLength(4)
+    @MaxLength(20)
+    @ApiProperty()
+    email:string;
+
+    @IsString()
+    @MinLength(4)
+    @MaxLength(20)
+    @ApiProperty()
+    address:string;
+
+    @IsString()
+    @MinLength(4)
+    @MaxLength(20)
+    @ApiProperty()
+    phoneNumber:number;
 }

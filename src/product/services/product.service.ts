@@ -123,4 +123,24 @@ export class ProductService {
     async addToCart(addToCartDto:AddToCartDto,user:User):Promise<AddProduct>{
         return await this.addProductRepository.addToCart(addToCartDto,user);
     }
+    
+    //delete from cart
+    async deleteFromCart(id:string,user:User):Promise<string>{
+        const found=await this.addProductRepository.findOne({id:id});
+
+        if(!found){
+            throw new NotFoundException();
+        }
+
+        this.addProductRepository.delete(found);
+        
+        return 'delete successfully'
+    }
+
+    //get all in cart
+    async getAllCart(user:User):Promise<AddProduct[]>{
+        const found= await this.addProductRepository.find({user:user});
+        
+        return found
+    }
 }

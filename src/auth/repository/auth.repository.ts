@@ -8,22 +8,34 @@ import { SignInDto } from "../DTO/sign-in.dto";
 @EntityRepository(User)
 export class UserRepository extends Repository<User>{
 
+    //signUp for user
     async signUp(signUpDto:AuthCredentialDto):Promise<void>{
-        const{username,firstname,lastname,password}=signUpDto;
+        const{username,email,password}=signUpDto;
         const exist=await this.findOne({username});
         if(exist)
         throw new BadRequestException(`username already exist`);
 
         const user=new User();
         user.username=username;
-        user.firstName=firstname;
-        user.lastName=lastname;
+        user.email=email;
         user.salt=await bcrypt.genSalt();
         user.password=await this.hashPassword(password , user.salt);
 
         this.save(user);
 
 
+    }
+
+    //complete information about user
+    async completeInfo(signUpDto:AuthCredentialDto,user:User):Promise<void>{
+        const {firstname,lastname,address,phoneNumber}=signUpDto;
+
+        user.firstName=firstname;
+        user.lastName=lastname;
+        user.address=address;
+        user.phoneNumber=phoneNumber
+
+        this.save(user);
     }
 
     //sign in 

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, UseGuards, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards, ValidationPipe } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { getUser } from '../decorator/get-user.decorator';
 import { RoleGuardDecorator } from '../decorator/role-guard.decorator';
@@ -51,5 +51,22 @@ export class AuthController {
     @Delete('delete/user')
     async deleteUser(@getUser() user:User):Promise<string>{
         return await this.authService.deleteUser(user);
+    }
+
+    //promote user to admin
+    @RoleGuardDecorator(RoleEnum.ADMIN)
+    @UseGuards(JwtGuard,RoleGuard)
+    @ApiBearerAuth('access-token')
+    @Patch('promoteUserToAdmin')
+    async promoteUserToAdmin(@Body() userId:string):Promise<User>{
+        return await this.authService.promoteUserToAdmin(userId);
+    }
+
+    //complete information about user
+    @UseGuards(JwtGuard)
+    @ApiBearerAuth('access-token')
+    @Post('completeInfo')
+    async completeInfo(@Body() signUpDto:AuthCredentialDto , @getUser() user:User):Promise<void>{
+        return await this.authService.completeInfo(signUpDto,user);
     }
 }

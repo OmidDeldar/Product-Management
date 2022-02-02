@@ -110,4 +110,22 @@ export class ProductController {
     async addToCart(@Body() addToCartDto:AddToCartDto,@getUser() user:User):Promise<AddProduct>{
         return await this.productService.addToCart(addToCartDto,user);
     }
+
+    //delete from cart
+    @UseGuards(JwtGuard)
+    @ApiBearerAuth('access-token')
+    @Delete('deleteFromCart')
+    async deleteFromCart(@Param() id:string,@getUser() user:User):Promise<string>{
+        return await this.productService.deleteFromCart(id,user);
+    }
+
+    //find all in cart
+    @RoleGuardDecorator(RoleEnum.ADMIN)
+    @UseGuards(JwtGuard,RoleGuard)
+    @ApiBearerAuth('access-token')
+    @Get('getAllCart')
+    async getAllCart(@getUser() user:User):Promise<AddProduct[]>{
+        return await this.productService.getAllCart(user);
+    }
+
 }

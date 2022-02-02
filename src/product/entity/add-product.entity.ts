@@ -22,4 +22,9 @@ export class AddProduct extends BaseEntity{
     @Column()
     productId:string;
 
+    @Column({default:false})
+    purchased:boolean;
+
+    @Column({default:1})
+    amount:number;
 }
