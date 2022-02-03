@@ -36,7 +36,7 @@ export class User extends BaseEntity{
     @Column({default:false})
     deleted:boolean;
 
-    @Column('enum',{enum:RoleEnum,default:RoleEnum.USER})
+    @Column('enum',{array:true,enum:RoleEnum})
     role:RoleEnum[]
 
     @OneToMany(type => Product , product => product.user , { eager : true})

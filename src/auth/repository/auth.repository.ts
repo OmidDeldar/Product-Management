@@ -4,6 +4,8 @@ import { AuthCredentialDto} from "../DTO/Auth-Credential.dto";
 import { User } from "../entity/auth.entity";
 import * as bcrypt from 'bcrypt'
 import { SignInDto } from "../DTO/sign-in.dto";
+import { CompleteUserInfoDto } from "../DTO/completeUserInfo.dto";
+import { RoleEnum } from "../enum/role.enum";
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User>{
@@ -20,22 +22,24 @@ export class UserRepository extends Repository<User>{
         user.email=email;
         user.salt=await bcrypt.genSalt();
         user.password=await this.hashPassword(password , user.salt);
-
+        user.role=[RoleEnum.USER]
         this.save(user);
 
 
     }
 
     //complete information about user
-    async completeInfo(signUpDto:AuthCredentialDto,user:User):Promise<void>{
-        const {firstname,lastname,address,phoneNumber}=signUpDto;
+    async completeInfo(completeInfoDto:CompleteUserInfoDto,user:User):Promise<void>{
+        const {firstname,lastname,address,phoneNumber}=completeInfoDto;
 
-        user.firstName=firstname;
-        user.lastName=lastname;
-        user.address=address;
-        user.phoneNumber=phoneNumber
+        const findUser=await this.findOne({id:user.id})
 
-        this.save(user);
+        findUser.firstName=firstname;
+        findUser.lastName=lastname;
+        findUser.address=address;
+        findUser.phoneNumber=phoneNumber
+
+        this.save(findUser);
     }
 
     //sign in 

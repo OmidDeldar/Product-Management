@@ -3,6 +3,8 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { getUser } from '../decorator/get-user.decorator';
 import { RoleGuardDecorator } from '../decorator/role-guard.decorator';
 import { AuthCredentialDto } from '../DTO/Auth-Credential.dto';
+import { CompleteUserInfoDto } from '../DTO/completeUserInfo.dto';
+import { PromoteUserToAdminDto } from '../DTO/promoteUserToAdmin.dto';
 import { SignInDto } from '../DTO/sign-in.dto';
 import { User } from '../entity/auth.entity';
 import { RoleEnum } from '../enum/role.enum';
@@ -58,15 +60,15 @@ export class AuthController {
     @UseGuards(JwtGuard,RoleGuard)
     @ApiBearerAuth('access-token')
     @Patch('promoteUserToAdmin')
-    async promoteUserToAdmin(@Body() userId:string):Promise<User>{
+    async promoteUserToAdmin(@Body() userId:PromoteUserToAdminDto):Promise<User>{
         return await this.authService.promoteUserToAdmin(userId);
     }
 
     //complete information about user
     @UseGuards(JwtGuard)
     @ApiBearerAuth('access-token')
-    @Post('completeInfo')
-    async completeInfo(@Body() signUpDto:AuthCredentialDto , @getUser() user:User):Promise<void>{
-        return await this.authService.completeInfo(signUpDto,user);
+    @Post('completeUserInfo')
+    async completeInfo(@Body() completeInfoDto:CompleteUserInfoDto , @getUser() user:User):Promise<void>{
+        return await this.authService.completeInfo(completeInfoDto,user);
     }
 }

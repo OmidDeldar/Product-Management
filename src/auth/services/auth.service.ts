@@ -2,6 +2,8 @@ import { ConflictException, Injectable, NotFoundException, UnauthorizedException
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthCredentialDto } from '../DTO/Auth-Credential.dto';
+import { CompleteUserInfoDto } from '../DTO/completeUserInfo.dto';
+import { PromoteUserToAdminDto } from '../DTO/promoteUserToAdmin.dto';
 import { SignInDto } from '../DTO/sign-in.dto';
 import { User } from '../entity/auth.entity';
 import { RoleEnum } from '../enum/role.enum';
@@ -63,8 +65,9 @@ export class AuthService {
     }
 
     //promote user to admin
-    async promoteUserToAdmin(userid:string):Promise<User>{
-        const found=await this.findUserById(userid);
+    async promoteUserToAdmin(userid:PromoteUserToAdminDto):Promise<User>{
+        const {id}=userid
+        const found=await this.findUserById(id);
         
         if(found.role.includes(RoleEnum.ADMIN))
         throw new ConflictException('user already is admin');
@@ -77,8 +80,8 @@ export class AuthService {
     }
 
     //complete information about user
-    async completeInfo(signUpDto:AuthCredentialDto,user:User):Promise<void>{
-        return await this.userRepository.completeInfo(signUpDto,user)
+    async completeInfo(completeInfoDto:CompleteUserInfoDto,user:User):Promise<void>{
+        return await this.userRepository.completeInfo(completeInfoDto,user)
     }
 
 
