@@ -31,7 +31,8 @@ export class AuthService {
         throw new UnauthorizedException('invalid username or password');
 
         const role=findRole.role;
-        const payload:JwtPayload={username,role};
+        const userId=findRole.id
+        const payload:JwtPayload={username,role,userId};
         const accessToken=await this.jwtService.sign(payload);
         
         return {accessToken};
