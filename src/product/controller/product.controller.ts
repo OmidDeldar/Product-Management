@@ -121,13 +121,14 @@ export class ProductController {
     }
 
     //find all in cart
-    @RoleGuardDecorator(RoleEnum.ADMIN)
-    @UseGuards(JwtGuard,RoleGuard)
+    @UseGuards(JwtGuard)
     @ApiBearerAuth('access-token')
     @Get('getAllCart')
     async getAllCart(@getUser() user:User):Promise<AddProduct[]>{
         return await this.productService.getAllCart(user);
     }
+
+
 
     //purchased complete
     @UseGuards(JwtGuard)
@@ -144,4 +145,14 @@ export class ProductController {
     async updateProduct(@Param('id') id:string,@Body() updateProductDto:UpdateProductDto,@getUser() user:User):Promise<Product>{
         return await this.productService.updateProduct(id,updateProductDto)
     }
+
+    @RoleGuardDecorator(RoleEnum.ADMIN)
+    @UseGuards(JwtGuard,RoleGuard)
+    @ApiBearerAuth('access-token')
+    @Get('findAllCart')
+    async findAllCart():Promise<AddProduct[]>{
+        return await this.productService.findAllCart();
+    }
+
+    
 }

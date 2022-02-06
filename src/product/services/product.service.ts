@@ -161,4 +161,10 @@ export class ProductService {
     async updateProduct(id:string,updateproductDto:UpdateProductDto):Promise<Product>{
         return await this.productRepository.updateProduct(id,updateproductDto);
     }
+
+    async findAllCart():Promise<AddProduct[]>{
+        const found=await this.addProductRepository.find();
+
+        return found;
+    }
 }
