@@ -170,5 +170,12 @@ export class ProductController {
     async purchaseCompletedAmount():Promise<number>{
         return await this.productService.purchaseCompletedAmount();
     }
+
+    @UseGuards(JwtGuard)
+    @ApiBearerAuth('access-token')
+    @Get('categoriesName')
+    async categoriesName():Promise<string[]>{
+        return await this.productService.categoriesName();
+    }
     
 }

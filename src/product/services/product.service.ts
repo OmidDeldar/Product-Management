@@ -196,6 +196,19 @@ export class ProductService {
         return productAmount;
     }
 
+    async categoriesName():Promise<string[]>{
+        const found=await this.productRepository.find({deleted:false})
+
+        var categoryArray=[];
+
+
+        for (const iterator of found) {
+            categoryArray.push(iterator.category);
+        }
+
+
+        return categoryArray
+    }
 
 
 }
