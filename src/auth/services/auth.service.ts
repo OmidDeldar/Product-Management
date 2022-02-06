@@ -85,5 +85,14 @@ export class AuthService {
         return await this.userRepository.completeInfo(completeInfoDto,user)
     }
 
+    async userAmount():Promise<number>{
+        const found=await this.userRepository.find({deleted:false});
+        let userAmount=0;
+        for (const iterator of found) {
+            userAmount++;
+        }
+
+        return userAmount
+    }
 
 }

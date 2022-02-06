@@ -167,4 +167,26 @@ export class ProductService {
 
         return found;
     }
+
+    async productAmount():Promise<number>{
+        const found=await this.productRepository.find({deleted:false})
+        let productAmount=0
+        for (const iterator of found) {
+          productAmount++;  
+        }
+
+        return productAmount;
+    }
+
+    
+    async purchaseCompletedAmount():Promise<number>{
+        const found=await this.addProductRepository.find({where:{purchased:true}})
+        let productAmount=0
+        for (const iterator of found) {
+          productAmount++;  
+        }
+
+        return productAmount;
+    }
+
 }

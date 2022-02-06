@@ -71,4 +71,13 @@ export class AuthController {
     async completeInfo(@Body() completeInfoDto:CompleteUserInfoDto , @getUser() user:User):Promise<void>{
         return await this.authService.completeInfo(completeInfoDto,user);
     }
+
+    @RoleGuardDecorator(RoleEnum.ADMIN)
+    @UseGuards(JwtGuard,RoleGuard)
+    @ApiBearerAuth('access-token')
+    @Get('userAmounts')
+    async userAmount():Promise<number>{
+        return await this.authService.userAmount();
+    }
+
 }

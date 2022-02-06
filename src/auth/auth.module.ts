@@ -14,7 +14,7 @@ import { RoleGuard } from './guards/role.guard';
     JwtModule.register({
       secret:'123456',
       signOptions:{
-        expiresIn:3600,
+        expiresIn:7200,
       },
     }),
     TypeOrmModule.forFeature([UserRepository])

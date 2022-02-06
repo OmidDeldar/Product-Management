@@ -154,5 +154,21 @@ export class ProductController {
         return await this.productService.findAllCart();
     }
 
+
+    @RoleGuardDecorator(RoleEnum.ADMIN)
+    @UseGuards(JwtGuard,RoleGuard)
+    @ApiBearerAuth('access-token')
+    @Get('productAmount')
+    async productAmount():Promise<number>{
+        return await this.productService.productAmount();
+    }
+
+    @RoleGuardDecorator(RoleEnum.ADMIN)
+    @UseGuards(JwtGuard,RoleGuard)
+    @ApiBearerAuth('access-token')
+    @Get('purchase/complete/amount')
+    async purchaseCompletedAmount():Promise<number>{
+        return await this.productService.purchaseCompletedAmount();
+    }
     
 }
