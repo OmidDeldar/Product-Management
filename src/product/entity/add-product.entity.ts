@@ -15,9 +15,24 @@ export class AddProduct extends BaseEntity{
     @Column()
     userId:string;
 
+    @Column()
+    userFullName:string
+
+    @Column()
+    userAddress:string;
+
+    @Column()
+    userPhoneNumber:number
+
     @OneToOne(type => Product , product => product.addproduct)
     @JoinColumn()
     product:Product;
+
+    @Column()
+    productName:string
+
+    @Column()
+    productPrice:number
 
     @Column()
     productId:string;

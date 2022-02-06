@@ -119,7 +119,9 @@ export class ProductService {
 
     //add to cart
     async addToCart(addToCartDto:AddToCartDto,user:User):Promise<AddProduct>{
-        return await this.addProductRepository.addToCart(addToCartDto,user);
+        const {productId}=addToCartDto;
+        const found=await this.productRepository.findOne({id:productId})
+        return await this.addProductRepository.addToCart(addToCartDto,user,found);
     }
     
     //delete from cart
@@ -165,6 +167,11 @@ export class ProductService {
     async findAllCart():Promise<AddProduct[]>{
         const found=await this.addProductRepository.find();
 
+        for (const iterator of found) {
+           const userid= iterator.userId;
+           
+        }
+
         return found;
     }
 
@@ -188,5 +195,7 @@ export class ProductService {
 
         return productAmount;
     }
+
+
 
 }
