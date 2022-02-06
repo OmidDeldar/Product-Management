@@ -6,6 +6,7 @@ import { CreateProductDto } from '../DTO/create-product.dto';
 import { GetProductByCategoryDto } from '../DTO/get-product-by-category.dto';
 import { GetProductByTitleDto } from '../DTO/get-product-by-title.dto';
 import { UpdatePriceDto } from '../DTO/update-price.dto';
+import { UpdateProductDto } from '../DTO/update-product.dto';
 import { AddProduct } from '../entity/add-product.entity';
 import { Product } from '../entity/product.entity';
 import { AddProductRepository } from '../repository/add-product.repository';
@@ -159,5 +160,8 @@ export class ProductService {
         
 
         return saved
+    }
+    async updateProduct(id:string,updateproductDto:UpdateProductDto):Promise<Product>{
+        return await this.productRepository.updateProduct(id,updateproductDto);
     }
 }

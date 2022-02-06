@@ -16,6 +16,7 @@ import { UpdatePriceDto } from '../DTO/update-price.dto';
 import { AddProduct } from '../entity/add-product.entity';
 import { Product } from '../entity/product.entity';
 import { ProductService } from '../services/product.service';
+import { UpdateProductDto } from '../DTO/update-product.dto';
 
 @ApiTags('products')
 @Controller('product')
@@ -136,4 +137,11 @@ export class ProductController {
         return await this.productService.purchasedComplete(user);
     }
 
+    @RoleGuardDecorator(RoleEnum.ADMIN)
+    @UseGuards(JwtGuard,RoleGuard)
+    @ApiBearerAuth('access-token')
+    @Post('updateProduct/:id')
+    async updateProduct(@Param('id') id:string,@Body() updateProductDto:UpdateProductDto,@getUser() user:User):Promise<Product>{
+        return await this.productService.updateProduct(id,updateProductDto)
+    }
 }
