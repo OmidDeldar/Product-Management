@@ -34,7 +34,7 @@ export class AddProduct extends BaseEntity{
     @Column()
     productPrice:number
 
-    @Column()
+    @Column({nullable:true})
     productPicture:string;
 
     @Column()
