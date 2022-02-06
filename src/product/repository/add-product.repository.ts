@@ -32,6 +32,7 @@ export class AddProductRepository extends Repository<AddProduct>{
         addProduct.productId=productId
         addProduct.productName=found.title
         addProduct.productPrice=found.price
+        addProduct.productPicture=found.profile
         addProduct.userFullName=user.firstName+user.lastName;
         addProduct.userAddress=user.address;
         addProduct.userPhoneNumber=user.phoneNumber;

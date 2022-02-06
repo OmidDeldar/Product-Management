@@ -30,8 +30,7 @@ export class AuthController {
     }
     
     //find all user
-    @RoleGuardDecorator(RoleEnum.ADMIN)
-    @UseGuards(JwtGuard,RoleGuard)
+    @UseGuards(JwtGuard)
     @ApiBearerAuth('access-token')
     @Get('findAll')
     async findAll():Promise<User[]>{

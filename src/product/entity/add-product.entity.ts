@@ -35,6 +35,9 @@ export class AddProduct extends BaseEntity{
     productPrice:number
 
     @Column()
+    productPicture:string;
+
+    @Column()
     productId:string;
 
     @Column({default:false})
