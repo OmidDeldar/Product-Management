@@ -5,7 +5,7 @@ import { AddToCartDto } from '../DTO/add-to-cart.dto';
 import { CreateProductDto } from '../DTO/create-product.dto';
 import { GetProductByCategoryDto } from '../DTO/get-product-by-category.dto';
 import { GetProductByTitleDto } from '../DTO/get-product-by-title.dto';
-import { UpdateSaleDto } from '../DTO/update-sale.dto';
+import { UpdatePriceDto } from '../DTO/update-price.dto';
 import { AddProduct } from '../entity/add-product.entity';
 import { Product } from '../entity/product.entity';
 import { AddProductRepository } from '../repository/add-product.repository';
@@ -48,11 +48,11 @@ export class ProductService {
 
 
     //upadte sale
-    async updateSale(updateSaleDto:UpdateSaleDto):Promise<Product>{
-        const {id,sale}=updateSaleDto;
+    async updatePrice(updatePriceDto:UpdatePriceDto):Promise<Product>{
+        const {id,price}=updatePriceDto;
         const found=await this.findProductById(id);
 
-        found.sale=sale;
+        found.price=price;
         const saved=this.productRepository.save(found);
         return saved;
     }
@@ -142,5 +142,22 @@ export class ProductService {
         const found= await this.addProductRepository.find({user:user});
         
         return found
+    }
+
+    //purchased complete
+    async purchasedComplete(user:User):Promise<AddProduct[]>{
+
+        const date=new Date();
+        const found=await this.addProductRepository.find({user:user});
+        
+        for (const iterator of found) {
+            iterator.purchased=true
+            iterator.date=date
+        }
+
+        const saved=await this.addProductRepository.save(found);
+        
+
+        return saved
     }
 }

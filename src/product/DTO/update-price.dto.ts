@@ -1,9 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
 
-export class UpdateSaleDto{
+export class UpdatePriceDto{
     @ApiProperty()
     id:string;
 
     @ApiProperty()
-    sale:number;
+    price:number;
 }

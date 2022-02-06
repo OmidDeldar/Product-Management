@@ -12,7 +12,7 @@ import { AddToCartDto } from '../DTO/add-to-cart.dto';
 import { CreateProductDto } from '../DTO/create-product.dto';
 import { GetProductByCategoryDto } from '../DTO/get-product-by-category.dto';
 import { GetProductByTitleDto } from '../DTO/get-product-by-title.dto';
-import { UpdateSaleDto } from '../DTO/update-sale.dto';
+import { UpdatePriceDto } from '../DTO/update-price.dto';
 import { AddProduct } from '../entity/add-product.entity';
 import { Product } from '../entity/product.entity';
 import { ProductService } from '../services/product.service';
@@ -52,9 +52,9 @@ export class ProductController {
     @RoleGuardDecorator(RoleEnum.ADMIN)
     @UseGuards(JwtGuard,RoleGuard)
     @ApiBearerAuth('access-token')
-    @Patch('update/sale')
-    async updateSale(@Body(ValidationPipe) updateSaleDto:UpdateSaleDto):Promise<Product>{
-        return await this.productService.updateSale(updateSaleDto);
+    @Patch('update/price')
+    async updatePrice(@Body(ValidationPipe) updatePriceDto:UpdatePriceDto):Promise<Product>{
+        return await this.productService.updatePrice(updatePriceDto);
     }
 
     //find all product
@@ -126,6 +126,14 @@ export class ProductController {
     @Get('getAllCart')
     async getAllCart(@getUser() user:User):Promise<AddProduct[]>{
         return await this.productService.getAllCart(user);
+    }
+
+    //purchased complete
+    @UseGuards(JwtGuard)
+    @ApiBearerAuth('access-token')
+    @Post('purchasedComplete')
+    async purchasedComplete(@getUser() user:User):Promise<AddProduct[]>{
+        return await this.productService.purchasedComplete(user);
     }
 
 }

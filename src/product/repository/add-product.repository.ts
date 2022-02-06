@@ -14,6 +14,15 @@ export class AddProductRepository extends Repository<AddProduct>{
     //add to cart
     async addToCart(addToCartDto:AddToCartDto,user:User):Promise<AddProduct>{
         const {productId}=addToCartDto
+
+        // const found=await this.findOne({where: {id:productId,userId:user.id}})
+
+        // if(found)
+        // found.amount+=1;
+        // const saved=await this.save(found);
+        // return saved
+        
+        
         const addProduct=new AddProduct();
         addProduct.productId=productId;
         addProduct.user=user;
@@ -22,5 +31,6 @@ export class AddProductRepository extends Repository<AddProduct>{
 
         delete addProduct.user;
         return saved;
+        
     }
 }

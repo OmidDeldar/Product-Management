@@ -27,4 +27,7 @@ export class AddProduct extends BaseEntity{
 
     @Column({default:1})
     amount:number;
+
+    @Column({nullable:true})
+    date:Date
 }
