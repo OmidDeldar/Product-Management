@@ -98,10 +98,7 @@ export class ProductService {
 
 
 
-        if(!Array.isArray(found.profile))
-        found.profile=[];
-
-        found.profile.push(file.originalname);
+        found.profile=file.originalname;
 
         
         

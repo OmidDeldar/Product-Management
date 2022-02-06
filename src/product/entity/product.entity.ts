@@ -22,14 +22,14 @@ export class Product extends BaseEntity{
     @Column()
     price:number;
 
-    @Column()
+    @Column({nullable:true})
     sale:number;
 
     @Column({default:false})
     deleted:boolean;
 
-    @Column('simple-array',{nullable:true})
-    profile:Array<string>;
+    @Column({nullable:true})
+    profile:string;
 
     @ManyToOne(type => User , user => user.product , { eager : false})
     user:User;
