@@ -38,7 +38,7 @@ export class AuthController {
     }
 
     //find user by id
-    @RoleGuardDecorator(RoleEnum.ADMIN)
+    
     @UseGuards(JwtGuard,RoleGuard)
     @ApiBearerAuth('access-token')
     @Get('find/:id')
