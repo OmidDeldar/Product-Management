@@ -69,7 +69,7 @@ export class AuthService {
     async promoteUserToAdmin(userid:PromoteUserToAdminDto):Promise<User>{
         const {id}=userid
         const found=await this.findUserById(id);
-        
+            
         if(found.role.includes(RoleEnum.ADMIN))
         throw new ConflictException('user already is admin');
 
@@ -87,12 +87,10 @@ export class AuthService {
 
     async userAmount():Promise<number>{
         const found=await this.userRepository.find({deleted:false});
-        let userAmount=0;
-        for (const iterator of found) {
-            userAmount++;
-        }
+        let userAmount=found.length;
+      
 
-        return userAmount
+        return userAmount;
     }
 
 }

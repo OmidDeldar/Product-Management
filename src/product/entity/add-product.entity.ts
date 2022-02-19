@@ -47,5 +47,5 @@ export class AddProduct extends BaseEntity{
     amount:number;
 
     @Column({nullable:true})
-    date:Date
+    date:string
 }

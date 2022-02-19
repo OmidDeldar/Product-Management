@@ -1,5 +1,5 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Res, UploadedFile, UseGuards, UseInterceptors, ValidationPipe } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+import { 
+    Body, Controller, Delete, Get, Param, Patch, Post, Res, UploadedFile, UseGuards, UseInterceptors, ValidationPipe } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { getUser } from 'src/auth/decorator/get-user.decorator';
@@ -133,11 +133,12 @@ export class ProductController {
     //purchased complete
     @UseGuards(JwtGuard)
     @ApiBearerAuth('access-token')
-    @Post('purchasedComplete')
+    @Patch('purchasedComplete')
     async purchasedComplete(@getUser() user:User):Promise<AddProduct[]>{
         return await this.productService.purchasedComplete(user);
     }
 
+    //update for product
     @RoleGuardDecorator(RoleEnum.ADMIN)
     @UseGuards(JwtGuard,RoleGuard)
     @ApiBearerAuth('access-token')
@@ -146,6 +147,7 @@ export class ProductController {
         return await this.productService.updateProduct(id,updateProductDto)
     }
 
+    //find all carts for admin
     @RoleGuardDecorator(RoleEnum.ADMIN)
     @UseGuards(JwtGuard,RoleGuard)
     @ApiBearerAuth('access-token')
@@ -155,6 +157,7 @@ export class ProductController {
     }
 
 
+    //return number of products amount
     @RoleGuardDecorator(RoleEnum.ADMIN)
     @UseGuards(JwtGuard,RoleGuard)
     @ApiBearerAuth('access-token')
@@ -163,6 +166,7 @@ export class ProductController {
         return await this.productService.productAmount();
     }
 
+    //return number of purchased completed
     @RoleGuardDecorator(RoleEnum.ADMIN)
     @UseGuards(JwtGuard,RoleGuard)
     @ApiBearerAuth('access-token')
@@ -173,9 +177,15 @@ export class ProductController {
 
 
 
+    //return all categories names
     @Get('categoriesName')
     async categoriesName():Promise<string[]>{
         return await this.productService.categoriesName();
     }
     
+    //return most used product in AddProduct
+    @Get('bestProduct')
+    async bestProduct():Promise<Product>{
+        return await this.productService.bestProduct();
+    }
 }

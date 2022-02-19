@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException , Injectable , NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/auth/entity/auth.entity';
 import { AddToCartDto } from '../DTO/add-to-cart.dto';
@@ -41,8 +41,8 @@ export class ProductService {
         
         const found=await this.findProductById(id);
 
-        found.deleted=true;
-        this.productRepository.save(found);
+        
+        this.productRepository.delete(found);
 
         return 'delete successfully';
     }
@@ -139,7 +139,7 @@ export class ProductService {
 
     //get all in cart
     async getAllCart(user:User):Promise<AddProduct[]>{
-        const found= await this.addProductRepository.find({user:user});
+        const found= await this.addProductRepository.find({user:user,purchased:false});
         
         return found
     }
@@ -147,7 +147,7 @@ export class ProductService {
     //purchased complete
     async purchasedComplete(user:User):Promise<AddProduct[]>{
 
-        const date=new Date();
+        const date=new Date().toLocaleDateString('fa-IR');;
         const found=await this.addProductRepository.find({user:user});
         
         for (const iterator of found) {
@@ -160,10 +160,13 @@ export class ProductService {
 
         return saved
     }
+
+    //update product 
     async updateProduct(id:string,updateproductDto:UpdateProductDto):Promise<Product>{
         return await this.productRepository.updateProduct(id,updateproductDto);
     }
 
+    //find all carts for admin
     async findAllCart():Promise<AddProduct[]>{
         const found=await this.addProductRepository.find();
 
@@ -175,40 +178,68 @@ export class ProductService {
         return found;
     }
 
+    //return number of products amount
     async productAmount():Promise<number>{
         const found=await this.productRepository.find({deleted:false})
-        let productAmount=0
-        for (const iterator of found) {
-          productAmount++;  
-        }
+        let productAmount=found.length
 
         return productAmount;
     }
 
-    
+    //return number of purchased compelete
     async purchaseCompletedAmount():Promise<number>{
         const found=await this.addProductRepository.find({where:{purchased:true}})
-        let productAmount=0
-        for (const iterator of found) {
-          productAmount++;  
-        }
+        let productAmount=found.length
+       
 
         return productAmount;
     }
 
+    //return all categories names
     async categoriesName():Promise<string[]>{
         const found=await this.productRepository.find({deleted:false})
 
         var categoryArray=[];
 
 
-        for (const iterator of found) {
-            categoryArray.push(iterator.category);
+        for (const categories of found) {
+            var categoryExist=categoryArray.indexOf(categories.category)
+
+            if(categoryExist<0)
+            {
+                categoryArray.push(categories.category);
+            }
+            
         }
 
 
         return categoryArray
     }
+
+    //find the best product
+    async bestProduct():Promise<Product>{
+
+        const found=await this.addProductRepository.find();
+        
+        const mostUse=await this.getMostFrequent(found);
+
+        const foundMostUsed=await this.productRepository.findOne({where:{id:mostUse}})
+
+        return foundMostUsed
+        
+    }
+    //find the most used product in AddProduct 
+    async getMostFrequent(found){
+        const hashMap=await found.reduce((acc,val)=>{
+            acc[val.productId]=(acc[val.productId] || 0) + 1
+            return acc
+        },{})
+        return await Object.keys(hashMap).reduce((a, b) => hashMap[a] > hashMap[b] ? a:b)
+    }    
+
+        
+        
+    
 
 
 }
